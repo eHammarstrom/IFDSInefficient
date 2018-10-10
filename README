@@ -1,0 +1,7 @@
+Task 1:
+
+Task 2:
+Added "-p jb preserve-source-annotations" to not lose source annotations.
+
+Fixes:
+-keep-line-numbers changed to -keep-line-number

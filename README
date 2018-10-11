@@ -1,0 +1,2 @@
+Need java-8:
+    On Ubuntu, can set default jre with: sudo update-alternatives --config java

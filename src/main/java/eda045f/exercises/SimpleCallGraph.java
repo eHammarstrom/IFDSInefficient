@@ -8,7 +8,7 @@ import soot.Unit;
 import soot.jimple.toolkits.ide.icfg.JimpleBasedInterproceduralCFG;
 
 public class SimpleCallGraph extends JimpleBasedInterproceduralCFG {
-	private String[] targetClasses = {"eda045f.exercises.Test1", "java.util.ArrayList", "java.util.LinkedList"};//, "java.lang", "java.util"};//, "java.util.Collection", "java.util.List", "java.util"};
+	private String[] targetClasses = {"eda045f.exercises", "java.util.ArrayList", "java.util.LinkedList"};//, "java.lang", "java.util"};//, "java.util.Collection", "java.util.List", "java.util"};
 	public SimpleCallGraph() {
 		super(false,false);
 	}

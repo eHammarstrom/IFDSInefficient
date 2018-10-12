@@ -79,24 +79,25 @@ public class IFDSInefficientCallsSceneTransformer extends SceneTransformer {
 //        SootMethod m = Scene.v().getMethod("<java.util.Collection: boolean contains(java.lang.Object)>");
 
 		SimpleCallGraph cfg = new SimpleCallGraph();
-        SootMethod main = Scene.v().getMethod("<eda045f.exercises.Test1: void main(java.lang.String[])>");
-		explore(cfg, main, null, new HashSet<>());
+//        SootMethod main = Scene.v().getMethod("<eda045f.exercises.Test1: void main(java.lang.String[])>");
+//		explore(cfg, main, null, new HashSet<>());
 
-		IFDSTabulationProblem<Unit, Pair<Value, Set<Stmt>>, SootMethod, InterproceduralCFG<Unit, SootMethod>> problem = new IFDSInefficientCalls(cfg);
+		IFDSTabulationProblem<Unit, Value, SootMethod, InterproceduralCFG<Unit, SootMethod>> problem = new IFDSInefficientCalls(cfg);
 ////        
-		JimpleIFDSSolver<Pair<Value, Set<Stmt>>, InterproceduralCFG<Unit, SootMethod>> solver = new JimpleIFDSSolver<>(problem);
+		JimpleIFDSSolver<Value, InterproceduralCFG<Unit, SootMethod>> solver = new JimpleIFDSSolver<>(problem);
 		System.out.println("Solve Begin");
 		solver.solve();
 		System.out.println("Solve End");
         System.out.println("Propagation Count: " + solver.propagationCount);
         solver.dumpResults();
-
-        solver.ifdsResultsAt(main.getActiveBody().getUnits().getLast()).forEach(p -> {
-            System.out.println("VAR: " + p.getValue0());
-            p.getValue1().forEach(s -> {
-                System.out.println("\t" + s + " at line: " + s.getJavaSourceStartLineNumber());
-            });
-        });
+        
+        ((IFDSInefficientCalls)problem).printResult();
+//        solver.ifdsResultsAt(main.getActiveBody().getUnits().getLast()).forEach(p -> {
+//            System.out.println("VAR: " + p.getValue0());
+//            p.getValue1().forEach(s -> {
+//                System.out.println("\t" + s + " at line: " + s.getJavaSourceStartLineNumber());
+//            });
+//        });
 //		solver.printStats();
 //		printAll(new Function<Stmt, String>() {
 //			@Override

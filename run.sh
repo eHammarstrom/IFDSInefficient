@@ -22,7 +22,9 @@ mvn compile
 # done
 
 # java -ea -cp target/classes:target/lib/* eda045f.exercises.MyMainClass -cp $cpSOOT -f j -process-dir ./examples/javacc-5.0.jar
-java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT eda045f.exercises.Test1 
+java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT eda045f.exercises.Test1
+# java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT eda045f.exercises.Test2
+# java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT eda045f.exercises.Test1:eda045f.exercises.Test2
 # java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT org.javacc.parser.Main
 # java -ea -cp target/classes:target/lib/* eda045f.exercises.MyMainClass -cp $cpSOOT -f j -process-dir ./examples/bouncycastle-160.jar
 # java -ea -cp target/classes:target/lib/* eda045f.exercises.MyMainClass -cp $cpSOOT:./examples/javacc-5.0.jar -f j org.javacc.parser.LexGen

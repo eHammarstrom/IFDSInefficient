@@ -1,0 +1,13 @@
+virtualinvoke r2.<java.util.ArrayList: boolean remove(java.lang.Object)>("1") at 16
+interfaceinvoke r1.<java.util.Collection: boolean remove(java.lang.Object)>("COLL_COLL") at 77
+interfaceinvoke r3.<java.util.Collection: boolean remove(java.lang.Object)>("COLL_COLL22") at 83
+interfaceinvoke r1.<java.util.List: boolean contains(java.lang.Object)>("TEST7") at 59
+virtualinvoke r2.<java.util.ArrayList: boolean contains(java.lang.Object)>(r1) at 40
+virtualinvoke r2.<java.util.ArrayList: boolean contains(java.lang.Object)>("1") at 14
+interfaceinvoke r1.<java.util.Collection: boolean contains(java.lang.Object)>("TEST4") at 47
+interfaceinvoke r1.<java.util.Collection: boolean contains(java.lang.Object)>("TEST9") at 67
+interfaceinvoke r1.<java.util.Collection: boolean contains(java.lang.Object)>("TEST10") at 72
+interfaceinvoke r1.<java.util.Collection: boolean contains(java.lang.Object)>("TEST8") at 63
+virtualinvoke r1.<java.util.ArrayList: boolean contains(java.lang.Object)>("TEST2") at 44
+interfaceinvoke r6.<java.util.Collection: boolean contains(java.lang.Object)>("COLL_MAIN") at 31
+interfaceinvoke r1.<java.util.Collection: boolean contains(java.lang.Object)>("TEST6") at 55

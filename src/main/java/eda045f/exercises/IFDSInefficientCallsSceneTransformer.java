@@ -11,13 +11,13 @@ import org.javatuples.Pair;
 import heros.IFDSTabulationProblem;
 import heros.InterproceduralCFG;
 import soot.Body;
-import soot.Local;
+import soot.Value;
 import soot.Scene;
 import soot.SceneTransformer;
 import soot.SootClass;
 import soot.SootMethod;
 import soot.Unit;
-import soot.jimple.InvokeExpr;
+import soot.jimple.Stmt;
 import soot.jimple.Stmt;
 import soot.jimple.toolkits.ide.JimpleIFDSSolver;
 import soot.jimple.toolkits.ide.icfg.JimpleBasedInterproceduralCFG;
@@ -70,7 +70,6 @@ public class IFDSInefficientCallsSceneTransformer extends SceneTransformer {
 				});
 			});
 		}
-
 	}
 
 	@Override
@@ -80,15 +79,24 @@ public class IFDSInefficientCallsSceneTransformer extends SceneTransformer {
 //        SootMethod m = Scene.v().getMethod("<java.util.Collection: boolean contains(java.lang.Object)>");
 
 		SimpleCallGraph cfg = new SimpleCallGraph();
-		explore(cfg, Scene.v().getMethod("<eda045f.exercises.Test1: void main(java.lang.String[])>"), null, new HashSet<>());
+        SootMethod main = Scene.v().getMethod("<eda045f.exercises.Test1: void main(java.lang.String[])>");
+		explore(cfg, main, null, new HashSet<>());
 
-		IFDSTabulationProblem<Unit, Pair<Local, Set<InvokeExpr>>, SootMethod, InterproceduralCFG<Unit, SootMethod>> problem = new IFDSInefficientCalls(cfg);
+		IFDSTabulationProblem<Unit, Pair<Value, Set<Stmt>>, SootMethod, InterproceduralCFG<Unit, SootMethod>> problem = new IFDSInefficientCalls(cfg);
 ////        
-		JimpleIFDSSolver<Pair<Local, Set<InvokeExpr>>, InterproceduralCFG<Unit, SootMethod>> solver = new JimpleIFDSSolver<>(problem);
+		JimpleIFDSSolver<Pair<Value, Set<Stmt>>, InterproceduralCFG<Unit, SootMethod>> solver = new JimpleIFDSSolver<>(problem);
 		System.out.println("Solve Begin");
 		solver.solve();
 		System.out.println("Solve End");
-		solver.dumpResults();
+        System.out.println("Propagation Count: " + solver.propagationCount);
+        solver.dumpResults();
+
+        solver.ifdsResultsAt(main.getActiveBody().getUnits().getLast()).forEach(p -> {
+            System.out.println("VAR: " + p.getValue0());
+            p.getValue1().forEach(s -> {
+                System.out.println("\t" + s + " at line: " + s.getJavaSourceStartLineNumber());
+            });
+        });
 //		solver.printStats();
 //		printAll(new Function<Stmt, String>() {
 //			@Override

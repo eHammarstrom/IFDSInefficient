@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#  rtJAR=''
-rtJAR=/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
-#  jceJAR=''
-jceJAR=/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar
+rtJAR=''
+# rtJAR=/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
+jceJAR=''
+# jceJAR=/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar
 
 if [[ "$rtJAR" -eq "" || "$jceJAR" -eq "" ]]
 then

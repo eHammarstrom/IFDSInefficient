@@ -2,21 +2,18 @@ package eda045f.exercises;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
-import heros.IFDSTabulationProblem;
-import heros.InterproceduralCFG;
-import soot.*;
-import soot.jimple.*;
-import soot.jimple.toolkits.ide.DefaultJimpleIFDSTabulationProblem;
-import soot.jimple.toolkits.ide.JimpleIFDSSolver;
-import soot.jimple.toolkits.ide.icfg.JimpleBasedInterproceduralCFG;
+import soot.PackManager;
+import soot.PhaseOptions;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.Transform;
 import soot.options.Options;
 
 public class Stub2 {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static void main(String[] args) {
 		for (int i = 0; i != args.length; i++)
@@ -26,17 +23,18 @@ public class Stub2 {
 			System.exit(1);
 		}
 
+		PackManager.v().getPack("wjtp")
+		.add(new Transform("wjtp.myanalysis", new IFDSInefficientCallsSceneTransformer()));
 		configure(args[0]);
 		registerEntryPoints(args[1].split(":"));
-
-		PackManager.v().getPack("wjtp")
-				.add(new Transform("wjtp.myanalysis", new IFDSInefficientCallsSceneTransformer()));
 		PackManager.v().runPacks();
 	}
 
 	public static void registerEntryPoints(String[] entrypoints) {
-		for (int i = 0; i != entrypoints.length; i++)
-			System.out.println("Entry: " + entrypoints[i]);
+		if (DEBUG) {
+			for (int i = 0; i != entrypoints.length; i++)
+				System.out.println("Entry: " + entrypoints[i]);
+		}
 
 		List<SootMethod> entry_points = new ArrayList<>();
 		if (entrypoints.length == 0) {
@@ -54,9 +52,12 @@ public class Stub2 {
 			if (DEBUG) {
 				System.out.println("  " + method);
 			}
+			
 		}
 		Scene.v().setEntryPoints(entry_points);
-		Scene.v().getEntryPoints().forEach(sm -> System.out.println("Set Entry: " + sm.getSignature()));
+		if (DEBUG) {
+			Scene.v().getEntryPoints().forEach(sm -> System.out.println("Set Entry: " + sm.getSignature()));
+		}
 	}
 
 	/**
@@ -65,7 +66,8 @@ public class Stub2 {
 	 * @param classpath
 	 */
 	public static void configure(String classpath) {
-		System.out.println("Classpath: " + classpath);
+		if(DEBUG)
+			System.out.println("Classpath: " + classpath);
 		Options.v().set_verbose(false);
 		Options.v().set_keep_line_number(true);
 		Options.v().set_src_prec(Options.src_prec_class);
@@ -77,13 +79,11 @@ public class Stub2 {
 		PhaseOptions.v().setPhaseOption("bop", "off");
 		PhaseOptions.v().setPhaseOption("db", "off");
 		PhaseOptions.v().setPhaseOption("gb", "off");
-		// PhaseOptions.v().setPhaseOption("cg", "off");
-
+		//PhaseOptions.v().setPhaseOption("cg", "off");
 		Options.v().set_whole_program(true); // whole-program analysis
-
-		System.out.println("Soot CP: " + Scene.v().getSootClassPath());
-
-		setAdvancedCallgraph(true);
+		if(DEBUG)
+			System.out.println("Soot CP: " + Scene.v().getSootClassPath());
+		//setAdvancedCallgraph(true);
 	}
 
 	/**

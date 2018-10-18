@@ -1,13 +1,13 @@
 package eda045f.exercises;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import heros.DefaultSeeds;
 import heros.FlowFunction;
 import heros.FlowFunctions;
@@ -54,7 +54,7 @@ public class IFDSInefficientCalls
 	protected Value createZeroValue() {
 		return new JimpleLocal("ZERO", NullType.v());
 	}
-
+	
 	/**
 	 * 0 holds at the beginning of all method calls. Property associated with a
 	 * globally scoped variable holds at the beginning of every method call.
@@ -128,10 +128,8 @@ public class IFDSInefficientCalls
 					 * Introduces a new Concrete Type.
 					 * Will have already propagated the information if RHS is a parameter.
 					 */
-					if (s == zeroValue() && !isParameter(d.getRightOp())) {
-						System.out.println("NEW CONCRETE FACT: " + d.getLeftOp());
+					if (s == zeroValue() && !isParameter(d.getRightOp()))
 						return Collections.singleton(d.getLeftOp());
-					}
 					return Collections.singleton(s);
 				}
 			};
@@ -147,10 +145,13 @@ public class IFDSInefficientCalls
 			for (Value value : args) 
 				if (value instanceof Local) 
 					localArguments.add((Local) value);
+			
 			/**
-			 * Have invocation: g(x1, x2, ..., xn) args = [x1, x2, ..., xn] Form
-			 * FlowFunction f :: D -> { D }
-			 * f s | s in args = { s } | otherwise = {}
+			 * Have invocation: g(x1, x2, ..., xn) args = [x1, x2, ..., xn] 
+			 * Form FlowFunction f :: D -> { D }
+			 * f s 
+			 * 		| s in args = { s } 
+			 * 		| otherwise = {}
 			 */
 			return new FlowFunction<Value>() {
 				@Override
@@ -187,6 +188,7 @@ public class IFDSInefficientCalls
 					 */
 					if (isTargetInvokation(callSite)) {
 						InstanceInvokeExpr iie = (InstanceInvokeExpr) ((InvokeStmt) callSite).getInvokeExpr();
+						
 						/**
 						 * r.contains(..) s.t. r == v
 						 */
@@ -201,7 +203,11 @@ public class IFDSInefficientCalls
 		@Override
 		public FlowFunction<Value> getReturnFlowFunction(Unit callSite, SootMethod calleeMethod,
 				Unit exitStmt, Unit returnSite) {
-			if(exitStmt instanceof ReturnVoidStmt) return KillAll.v();
+			
+			/**
+			 * Nothing gets propagated back if do not return anything, or if callsite does not receive any def.
+			 */
+			if(exitStmt instanceof ReturnVoidStmt) return KillAll.v(); // const (emptyset)
 			if(!(callSite instanceof DefinitionStmt)) return KillAll.v();
 			DefinitionStmt d = (DefinitionStmt) callSite;
 			
@@ -217,7 +223,7 @@ public class IFDSInefficientCalls
 		}
 	}
 	
-	public void printResult() {
-		foundStmts.forEach(s -> System.out.println(s + " at " + s.getJavaSourceStartLineNumber()));
+	public Set<Stmt> getFoundStmts() {
+		return foundStmts;
 	}
 }

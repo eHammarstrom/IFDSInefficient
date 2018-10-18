@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#  rtJAR=''
+rtJAR=/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar
+#  jceJAR=''
+jceJAR=/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar
+
+if [[ "$rtJAR" -eq "" || "$jceJAR" -eq "" ]]
+then
+  echo "Path to rt.jar and jce.jar must be set."
+  exit 1
+fi
+
 cpSOOT=\
 target/test-classes\
 :examples/javacc-5.0.jar\
@@ -13,6 +24,25 @@ target/test-classes\
 # :target/lib
 echo "SOOT CP: $cpSOOT"
 
+# get tests
+if [ ! -d ./examples ]
+then
+  mkdir examples
+  cd examples
+
+  wget http://fileadmin.cs.lth.se/cs/Education/EDA045F/2018/web/bcel-6.2.jar
+  wget http://fileadmin.cs.lth.se/cs/Education/EDA045F/2018/web/bcel-6.2-src.tar.gz
+
+  wget http://fileadmin.cs.lth.se/cs/Education/EDA045F/2018/web/xalan-2.7.2.jar
+  wget http://fileadmin.cs.lth.se/cs/Education/EDA045F/2018/web/xalan-2.7.2-src.tar.gz
+
+  wget http://fileadmin.cs.lth.se/cs/Education/EDA045F/2018/web/javacc-5.0.jar
+  wget http://fileadmin.cs.lth.se/cs/Education/EDA045F/2018/web/javacc-5.0-src.tar.gz
+
+  cd ..
+fi
+
+mvn package
 # mvn clean
 mvn compile
 # for filename in ./examples/*; do
@@ -32,25 +62,25 @@ mvn compile
 echo "-------------------------------------------------------"
 echo "Running Custom Tests"
 echo "-------------------------------------------------------"
-java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT eda045f.exercises.Test1:eda045f.exercises.Test2
+java -cp $rtJAR:$jceJAR:target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT eda045f.exercises.Test1:eda045f.exercises.Test2
 echo "-------------------------------------------------------"
 
 echo "-------------------------------------------------------"
 echo "Running JAVACC Tests"
 echo "-------------------------------------------------------"
-java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT jjdoc:jjtree:javacc:org.javacc.jjtree.Main:org.javacc.utils.JavaFileGenerator:org.javacc.jjdoc.JJDocMain:org.javacc.parser.Main
+java -cp $rtJAR:$jceJAR:target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT jjdoc:jjtree:javacc:org.javacc.jjtree.Main:org.javacc.utils.JavaFileGenerator:org.javacc.jjdoc.JJDocMain:org.javacc.parser.Main
 echo "-------------------------------------------------------"
 
 echo "-------------------------------------------------------"
 echo "Running BCEL"
 echo "-------------------------------------------------------"
-java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT org.apache.bcel.util.Class2HTML:org.apache.bcel.util.JavaWrapper:org.apache.bcel.util.BCELifier:org.apache.bcel.verifier.TransitiveHull:org.apache.bcel.verifier.Verifier:org.apache.bcel.verifier.NativeVerifier:org.apache.bcel.verifier.GraphicalVerifier:org.apache.bcel.verifier.VerifyDialog:org.apache.bcel.verifier.exc.AssertionViolatedException
+java -cp $rtJAR:$jceJAR:target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT org.apache.bcel.util.Class2HTML:org.apache.bcel.util.JavaWrapper:org.apache.bcel.util.BCELifier:org.apache.bcel.verifier.TransitiveHull:org.apache.bcel.verifier.Verifier:org.apache.bcel.verifier.NativeVerifier:org.apache.bcel.verifier.GraphicalVerifier:org.apache.bcel.verifier.VerifyDialog:org.apache.bcel.verifier.exc.AssertionViolatedException
 echo "-------------------------------------------------------"
 
 echo "-------------------------------------------------------"
 echo "Running XALAN Tests"
 echo "-------------------------------------------------------"
-java -cp target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT java_cup.Main:org.apache.xml.dtm.ref.IncrementalSAXSource_Xerces:org.apache.xml.dtm.ref.DTMSafeStringPool:org.apache.xml.dtm.ref.DTMStringPool:org.apache.xml.serializer.Version:org.apache.xml.resolver.apps.resolver:org.apache.xml.resolver.apps.xparse:org.apache.xml.resolver.apps.xread:org.apache.xml.resolver.Version:org.apache.xml.resolver.tests.BasicResolverTests:org.apache.xmlcommons.Version:org.apache.xerces.impl.xpath.regex.REUtil:org.apache.xerces.impl.xpath.XPath:org.apache.xerces.impl.Version:org.apache.xerces.impl.Constants:org.apache.xalan.xslt.EnvironmentCheck:org.apache.xalan.xslt.Process:org.apache.xalan.xsltc.util.JavaCupRedirect:org.apache.xalan.xsltc.cmdline.Compile:org.apache.xalan.xsltc.cmdline.Transform:org.apache.xalan.xsltc.ProcessorVersion:org.apache.xalan.lib.sql.ObjectArray:org.apache.xalan.processor.XSLProcessorVersion:org.apache.xalan.Version
+java -cp $rtJAR:$jceJAR:target/classes:target/lib/* eda045f.exercises.Stub2 $cpSOOT java_cup.Main:org.apache.xml.dtm.ref.IncrementalSAXSource_Xerces:org.apache.xml.dtm.ref.DTMSafeStringPool:org.apache.xml.dtm.ref.DTMStringPool:org.apache.xml.serializer.Version:org.apache.xml.resolver.apps.resolver:org.apache.xml.resolver.apps.xparse:org.apache.xml.resolver.apps.xread:org.apache.xml.resolver.Version:org.apache.xml.resolver.tests.BasicResolverTests:org.apache.xmlcommons.Version:org.apache.xerces.impl.xpath.regex.REUtil:org.apache.xerces.impl.xpath.XPath:org.apache.xerces.impl.Version:org.apache.xerces.impl.Constants:org.apache.xalan.xslt.EnvironmentCheck:org.apache.xalan.xslt.Process:org.apache.xalan.xsltc.util.JavaCupRedirect:org.apache.xalan.xsltc.cmdline.Compile:org.apache.xalan.xsltc.cmdline.Transform:org.apache.xalan.xsltc.ProcessorVersion:org.apache.xalan.lib.sql.ObjectArray:org.apache.xalan.processor.XSLProcessorVersion:org.apache.xalan.Version
 echo "-------------------------------------------------------"
 
 # :javacc:org.javacc.jjtree.Main:org.javacc.utils.JavaFileGenerator:org.javacc.jjdoc.JJDocMain:org.javacc.parser.Main
